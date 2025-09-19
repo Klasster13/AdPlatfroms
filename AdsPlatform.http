@@ -1,0 +1,7 @@
+@AdsPlatform_HostAddress = https://localhost:7123
+
+
+@location=string
+GET {{AdsPlatform_HostAddress}}/api/ads/search?location={{location}}
+
+###
