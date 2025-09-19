@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22 d17.14
+VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdsPlatform", "AdsPlatform.csproj", "{994618D4-92BD-45F8-8D44-789D23D71109}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdPlatforms", "AdPlatforms.csproj", "{994618D4-92BD-45F8-8D44-789D23D71109}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

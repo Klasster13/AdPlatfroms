@@ -1,19 +1,36 @@
-﻿
-using AdsPlatform.Domain.Models;
+﻿using AdPlatforms.Models;
+using AdPlatforms.Repository;
 
-namespace AdsPlatform.Domain.ParsingService.Impl;
+namespace AdPlatforms.Services.Impl;
 
-public class DataService : IDataService
+public class DataService(IDataRepository dataRepository) : IDataService
 {
+    private readonly IDataRepository _dataRepository = dataRepository;
+
+
+    public void UploadPlatformsFromFile(IFormFile file)
+    {
+        var data = ParseFile(file);
+        _dataRepository.UploadData(data);
+    }
+
+
+    public List<string> FindPlatromsForLocation(string targetLocation)
+    {
+        return _dataRepository.FindPlatromsForLocation(targetLocation);
+    }
+
+
     /// <summary>
     /// Parsing file
     /// </summary>
     /// <param name="file">File from request</param>
     /// <returns>List of platforms from file</returns>
-    public List<Platform> UploadPlatformsFromFile(IFormFile file)
+    private static List<Platform> ParseFile(IFormFile file)
     {
         var platforms = new List<Platform>();
 
+        // Opening data reading stream from file
         using (var reader = new StreamReader(file.OpenReadStream()))
         {
             string? line;
@@ -35,6 +52,7 @@ public class DataService : IDataService
                     continue;
                 }
 
+                // Creating new platform entity
                 var platform = new Platform
                 {
                     Name = parts[0].Trim(),
@@ -44,16 +62,10 @@ public class DataService : IDataService
                     .Where(l => !string.IsNullOrWhiteSpace(l))]
                 };
 
+                platforms.Add(platform);
             }
         }
 
         return platforms;
-    }
-
-
-
-    public List<string> FindPlatromsForLocation(string targetLocation)
-    {
-        throw new NotImplementedException();
     }
 }

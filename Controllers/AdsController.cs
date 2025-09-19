@@ -1,17 +1,14 @@
-﻿using AdsPlatform.Domain.ParsingService;
+﻿using AdPlatforms.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 
-namespace AdsPlatform.Web.Controllers;
+namespace AdPlatforms.Controllers;
 
 
 [Route("api/[controller]")]
 [ApiController]
-public class AdsController(/*ILogger logger,*/ IDataService dataService) : ControllerBase
+public class AdsController( IDataService dataService) : ControllerBase
 {
-    // TODO LOGGER?
-    //private readonly ILogger _logger = logger;
     private readonly IDataService _dataService = dataService;
 
 
@@ -20,18 +17,26 @@ public class AdsController(/*ILogger logger,*/ IDataService dataService) : Contr
     /// </summary>
     /// <param name="file">Data file</param>
     /// <returns>Status code</returns>
+    /// <remarks>
     /// Sample request:
     /// 
     ///     POST /api/ads
+    ///     {
+    ///     file
+    ///     }
     /// </remarks>
     /// <responce code="200">Success</responce>
     /// <responce code="400">Invalid data</responce>
     [HttpPost("upload")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-
-    public IActionResult Upload([FromBody] IFormFile file)
+    public IActionResult Upload(IFormFile file)
     {
+        if (file is null || file.Length == 0)
+        {
+            return BadRequest("File data is invalid.");
+        }
+
         try
         {
             _dataService.UploadPlatformsFromFile(file);
@@ -49,7 +54,8 @@ public class AdsController(/*ILogger logger,*/ IDataService dataService) : Contr
     /// </summary>
     /// <param name="location">Location for searching</param>
     /// <returns>List of found platforms</returns>
-    /// /// Sample request:
+    /// <remarks>
+    /// Sample request:
     /// 
     ///     GET /api/ads/search?location=/ru
     /// </remarks>
