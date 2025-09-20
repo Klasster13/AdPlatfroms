@@ -2,6 +2,8 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs
-/bin/Debug/net9.0
-/obj
+/.vs/AdPlatforms
+/AdPlatforms/bin/Debug/net9.0
+/AdPlatforms/obj
+/AdPlatforms.Tests/bin/Debug/net9.0
+/AdPlatforms.Tests/obj

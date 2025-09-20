@@ -7,7 +7,7 @@ namespace AdPlatforms.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AdsController( IDataService dataService) : ControllerBase
+public class AdsController(IDataService dataService) : ControllerBase
 {
     private readonly IDataService _dataService = dataService;
 
@@ -22,7 +22,7 @@ public class AdsController( IDataService dataService) : ControllerBase
     /// 
     ///     POST /api/ads
     ///     {
-    ///     file
+    ///         // IFormFile
     ///     }
     /// </remarks>
     /// <responce code="200">Success</responce>

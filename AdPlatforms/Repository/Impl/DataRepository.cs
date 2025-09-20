@@ -11,7 +11,10 @@ public class DataRepository : IDataRepository
 
     public void UploadData(List<Platform> platforms)
     {
+        ArgumentNullException.ThrowIfNull(platforms, "Invalid data provided.");
+
         var newRoot = new LocationTreeNode();
+
         foreach (var platform in platforms)
         {
             foreach (var location in platform.Locations)
@@ -55,6 +58,11 @@ public class DataRepository : IDataRepository
 
     public List<string> FindPlatromsForLocation(string targetLocation)
     {
+        if (string.IsNullOrWhiteSpace(targetLocation))
+        {
+            return [];
+        }
+
         // Trying to find data saved in cache
         if (_cache.TryGetValue(targetLocation, out var cachedResult))
         {

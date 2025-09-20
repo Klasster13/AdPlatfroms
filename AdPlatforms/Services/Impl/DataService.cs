@@ -28,6 +28,11 @@ public class DataService(IDataRepository dataRepository) : IDataService
     /// <returns>List of platforms from file</returns>
     private static List<Platform> ParseFile(IFormFile file)
     {
+        if (file is null || file.Length == 0)
+        {
+            return [];
+        }
+
         var platforms = new List<Platform>();
 
         // Opening data reading stream from file
@@ -44,7 +49,7 @@ public class DataService(IDataRepository dataRepository) : IDataService
                     continue;
                 }
 
-                var parts = line.Split(':', 2);
+                var parts = line.Split(':', 2, StringSplitOptions.RemoveEmptyEntries);
 
                 // Skipping invalid lines
                 if (parts.Length != 2)
