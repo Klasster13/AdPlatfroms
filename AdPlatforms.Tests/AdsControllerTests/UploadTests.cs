@@ -51,6 +51,7 @@ public class UploadTests
         Assert.Null(result.Value);
 
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+        Assert.Equal(400, badRequestResult.StatusCode);
         Assert.Equal("File data is invalid.", badRequestResult.Value);
 
         _dataServiceMock.Verify(s => s.UploadPlatformsFromFile(It.IsAny<IFormFile>()),
@@ -73,6 +74,7 @@ public class UploadTests
         Assert.Null(result.Value);
 
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+        Assert.Equal(400, badRequestResult.StatusCode);
         Assert.Equal("File data is invalid.", badRequestResult.Value);
 
         _dataServiceMock.Verify(s => s.UploadPlatformsFromFile(It.IsAny<IFormFile>()),
@@ -97,6 +99,7 @@ public class UploadTests
         Assert.Null(result.Value);
 
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+        Assert.Equal(400, badRequestResult.StatusCode);
         Assert.Equal("Error loading data: Error while parsing file.", badRequestResult.Value);
 
         _dataServiceMock.Verify(s => s.UploadPlatformsFromFile(It.IsAny<IFormFile>()),

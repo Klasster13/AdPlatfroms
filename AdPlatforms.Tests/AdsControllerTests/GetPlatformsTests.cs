@@ -33,9 +33,10 @@ public class GetPlatformsTests
         Assert.Null(result.Result);
         Assert.NotNull(result.Value);
 
-
         Assert.Equal(expectedPlatforms, result.Value);
-        _dataServiceMock.Verify(s => s.FindPlatromsForLocation("/ru/svrd"), Times.Once());
+
+        _dataServiceMock.Verify(s => s.FindPlatromsForLocation("/ru/svrd"),
+            Times.Once());
     }
 
 
@@ -52,5 +53,90 @@ public class GetPlatformsTests
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
         Assert.Equal(400, badRequestResult.StatusCode);
         Assert.Equal("Location parameter is required", badRequestResult.Value);
+
+        _dataServiceMock.Verify(s => s.FindPlatromsForLocation(It.IsAny<string>()),
+            Times.Never);
+
+    }
+
+
+    [Fact]
+    public void GetPlatforms_EmptyLocation_ReturnsBadRequest()
+    {
+        var response = _controller.GetPlatforms("");
+
+
+        var result = Assert.IsType<ActionResult<List<string>>>(response);
+        Assert.NotNull(result.Result);
+        Assert.Null(result.Value);
+
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+        Assert.Equal(400, badRequestResult.StatusCode);
+        Assert.Equal("Location parameter is required", badRequestResult.Value);
+
+        _dataServiceMock.Verify(s => s.FindPlatromsForLocation(It.IsAny<string>()),
+            Times.Never);
+    }
+
+
+    [Fact]
+    public void GetPlatforms_WhitespaceLocation_ReturnsBadRequest()
+    {
+        var response = _controller.GetPlatforms("    ");
+
+
+        var result = Assert.IsType<ActionResult<List<string>>>(response);
+        Assert.NotNull(result.Result);
+        Assert.Null(result.Value);
+
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+        Assert.Equal(400, badRequestResult.StatusCode);
+        Assert.Equal("Location parameter is required", badRequestResult.Value);
+
+        _dataServiceMock.Verify(s => s.FindPlatromsForLocation(It.IsAny<string>()),
+            Times.Never);
+    }
+
+
+    [Fact]
+    public void GetPlatforms_ServiceThrowsException_ReturnsBadRequest()
+    {
+        _dataServiceMock.Setup(s => s.FindPlatromsForLocation(It.IsAny<string>()))
+            .Throws(new Exception("Internal error."));
+
+
+        var response = _controller.GetPlatforms("/ru");
+
+
+        var result = Assert.IsType<ActionResult<List<string>>>(response);
+        Assert.NotNull(result.Result);
+        Assert.Null(result.Value);
+
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+        Assert.Equal(400, badRequestResult.StatusCode);
+        Assert.Equal("Error getting data: Internal error.", badRequestResult.Value);
+
+        _dataServiceMock.Verify(s => s.FindPlatromsForLocation(It.IsAny<string>()),
+            Times.Once);
+    }
+
+
+    [Fact]
+    public void GetPlatforms_ServiceReturnEmptyList_ReturnsOkWithEmptyList()
+    {
+        _dataServiceMock.Setup(s => s.FindPlatromsForLocation("/non/exist"))
+            .Returns([]);
+
+
+        var response = _controller.GetPlatforms("/non/exist");
+
+
+        var result = Assert.IsType<ActionResult<List<string>>>(response);
+        Assert.Null(result.Result);
+        Assert.NotNull(result.Value);
+        Assert.Empty(result.Value);
+
+        _dataServiceMock.Verify(s => s.FindPlatromsForLocation("/non/exist"),
+            Times.Once);
     }
 }
