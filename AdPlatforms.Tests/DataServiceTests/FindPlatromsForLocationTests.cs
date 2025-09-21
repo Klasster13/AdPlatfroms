@@ -27,7 +27,7 @@ public class FindPlatromsForLocationTests
         var result = _dataService.FindPlatromsForLocation(targetLocation);
 
 
-        Assert.Equal(result, expectedResult);
+        Assert.Equal(expectedResult, result);
         _dataRepositoryMock.Verify(r => r.FindPlatromsForLocation(targetLocation), Times.Once);
     }
 
@@ -43,7 +43,7 @@ public class FindPlatromsForLocationTests
         var result = _dataService.FindPlatromsForLocation(targetLocation);
 
 
-        Assert.Equal(result, expectedResult);
+        Assert.Equal(expectedResult, result);
         _dataRepositoryMock.Verify(r => r.FindPlatromsForLocation(targetLocation), Times.Once);
     }
 
@@ -59,7 +59,7 @@ public class FindPlatromsForLocationTests
         var result = _dataService.FindPlatromsForLocation(targetLocation);
 
 
-        Assert.Equal(result, expectedResult);
+        Assert.Equal(expectedResult, result);
         _dataRepositoryMock.Verify(r => r.FindPlatromsForLocation(targetLocation), Times.Once);
     }
 }
