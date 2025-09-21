@@ -12,6 +12,10 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<IDataRepository, DataRepository>();
 builder.Services.AddScoped<IDataService, DataService>();
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(swagger =>
 {
