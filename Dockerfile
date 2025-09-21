@@ -11,7 +11,7 @@ RUN dotnet restore
 COPY AdPlatforms/ ./AdPlatforms/
 COPY AdPlatforms.Tests/ ./AdPlatforms.Tests/
 
-RUN dotnet dotnet build -c Release --no-restore
+RUN dotnet build -c Release --no-restore
 RUN dotnet test -c Release --no-build
 
 RUN dotnet publish AdPlatforms/AdPlatforms.csproj -c Release -o /app/publish --no-restore

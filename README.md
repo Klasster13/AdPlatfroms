@@ -22,7 +22,7 @@
 
 Запустить **Docker Compose** в папке с проектом:
 
-    docker compose up -d --build
+    docker compose up -d
 
 API доступно по адресу:
 
