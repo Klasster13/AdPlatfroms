@@ -127,7 +127,7 @@ public class UploadPlatformsFromFileTests
 
 
     [Fact]
-    public void UploadPlatformsFromFile_FileWithOnlyPlatformname_CreatesEmptyTree()
+    public void UploadPlatformsFromFile_FileWithOnlyPlatformName_CreatesEmptyTree()
     {
         var fileContent = "Яндекс.Директ:";
         var fileMock = CreateMockFormFile(fileContent);
@@ -142,6 +142,37 @@ public class UploadPlatformsFromFileTests
     }
 
 
+    [Fact]
+    public void UploadPlatformsFromFile_FileWithOnlyLocation_CreatesEmptyTree()
+    {
+        var fileContent = ":/ru,/ru/msk";
+        var fileMock = CreateMockFormFile(fileContent);
+
+
+        _dataService.UploadPlatformsFromFile(fileMock.Object);
+
+
+        _dataRepositoryMock.Verify(r => r.UploadData(
+            It.Is<List<Platform>>(repositoryData => repositoryData.Count == 0)),
+            Times.Once);
+    }
+
+
+    [Fact]
+    public void UploadPlatformsFromFile_FileWithManyLines_WorksCorrectly()
+    {
+        var fileContent = string.Join("\n", Enumerable.Range(1, 1000)
+            .Select(i => $"Platform{i}:/location{i}"));
+        var fileMock = CreateMockFormFile(fileContent);
+
+
+        _dataService.UploadPlatformsFromFile(fileMock.Object);
+
+
+        _dataRepositoryMock.Verify(r => r.UploadData(
+            It.Is<List<Platform>>(repositoryData => repositoryData.Count == 1000)),
+            Times.Once);
+    }
 
 
 
