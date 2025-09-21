@@ -2,6 +2,7 @@
 using AdPlatforms.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace AdPlatforms.Tests.AdsControllerTests;
@@ -9,13 +10,15 @@ namespace AdPlatforms.Tests.AdsControllerTests;
 public class UploadTests
 {
     private readonly Mock<IDataService> _dataServiceMock;
+    private readonly Mock<ILogger<AdsController>> _loggerMock;
     private readonly AdsController _controller;
 
 
     public UploadTests()
     {
         _dataServiceMock = new Mock<IDataService>();
-        _controller = new AdsController(_dataServiceMock.Object);
+        _loggerMock = new Mock<ILogger<AdsController>>();
+        _controller = new AdsController(_dataServiceMock.Object, _loggerMock.Object);
     }
 
 
@@ -33,7 +36,7 @@ public class UploadTests
         var result = Assert.IsType<ActionResult<string>>(response);
         Assert.Null(result.Result);
         Assert.NotNull(result.Value);
-        Assert.Equal("Successful uploading data.", result.Value);
+        Assert.Equal("Successful uploading file.", result.Value);
 
         _dataServiceMock.Verify(s => s.UploadPlatformsFromFile(fileMock.Object),
             Times.Once);
@@ -52,7 +55,7 @@ public class UploadTests
 
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
         Assert.Equal(400, badRequestResult.StatusCode);
-        Assert.Equal("File data is invalid.", badRequestResult.Value);
+        Assert.Equal("File is null or empty.", badRequestResult.Value);
 
         _dataServiceMock.Verify(s => s.UploadPlatformsFromFile(It.IsAny<IFormFile>()),
             Times.Never());
@@ -75,7 +78,7 @@ public class UploadTests
 
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
         Assert.Equal(400, badRequestResult.StatusCode);
-        Assert.Equal("File data is invalid.", badRequestResult.Value);
+        Assert.Equal("File is null or empty.", badRequestResult.Value);
 
         _dataServiceMock.Verify(s => s.UploadPlatformsFromFile(It.IsAny<IFormFile>()),
             Times.Never());
@@ -98,9 +101,9 @@ public class UploadTests
         Assert.NotNull(result.Result);
         Assert.Null(result.Value);
 
-        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
-        Assert.Equal(400, badRequestResult.StatusCode);
-        Assert.Equal("Error loading data: Error while parsing file.", badRequestResult.Value);
+        var objResult = Assert.IsType<ObjectResult>(result.Result);
+        Assert.Equal(500, objResult.StatusCode);
+        Assert.Equal("Error loading file: Error while parsing file.", objResult.Value);
 
         _dataServiceMock.Verify(s => s.UploadPlatformsFromFile(It.IsAny<IFormFile>()),
             Times.Once());

@@ -1,6 +1,8 @@
 ﻿using AdPlatforms.Controllers;
 using AdPlatforms.Services;
+using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace AdPlatforms.Tests.AdsControllerTests;
@@ -8,13 +10,15 @@ namespace AdPlatforms.Tests.AdsControllerTests;
 public class GetPlatformsTests
 {
     private readonly Mock<IDataService> _dataServiceMock;
+    private readonly Mock<ILogger<AdsController>> _loggerMock;
     private readonly AdsController _controller;
 
 
     public GetPlatformsTests()
     {
         _dataServiceMock = new Mock<IDataService>();
-        _controller = new AdsController(_dataServiceMock.Object);
+        _loggerMock = new Mock<ILogger<AdsController>>();
+        _controller = new AdsController(_dataServiceMock.Object, _loggerMock.Object);
     }
 
 
@@ -52,7 +56,7 @@ public class GetPlatformsTests
 
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
         Assert.Equal(400, badRequestResult.StatusCode);
-        Assert.Equal("Location parameter is required", badRequestResult.Value);
+        Assert.Equal("Valid location parameter is required.", badRequestResult.Value);
 
         _dataServiceMock.Verify(s => s.FindPlatromsForLocation(It.IsAny<string>()),
             Times.Never);
@@ -72,7 +76,7 @@ public class GetPlatformsTests
 
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
         Assert.Equal(400, badRequestResult.StatusCode);
-        Assert.Equal("Location parameter is required", badRequestResult.Value);
+        Assert.Equal("Valid location parameter is required.", badRequestResult.Value);
 
         _dataServiceMock.Verify(s => s.FindPlatromsForLocation(It.IsAny<string>()),
             Times.Never);
@@ -91,7 +95,7 @@ public class GetPlatformsTests
 
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
         Assert.Equal(400, badRequestResult.StatusCode);
-        Assert.Equal("Location parameter is required", badRequestResult.Value);
+        Assert.Equal("Valid location parameter is required.", badRequestResult.Value);
 
         _dataServiceMock.Verify(s => s.FindPlatromsForLocation(It.IsAny<string>()),
             Times.Never);
@@ -112,9 +116,9 @@ public class GetPlatformsTests
         Assert.NotNull(result.Result);
         Assert.Null(result.Value);
 
-        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
-        Assert.Equal(400, badRequestResult.StatusCode);
-        Assert.Equal("Error getting data: Internal error.", badRequestResult.Value);
+        var objResult = Assert.IsType<ObjectResult>(result.Result);
+        Assert.Equal(500, objResult.StatusCode);
+        Assert.Equal("Error getting data: Internal error.", objResult.Value);
 
         _dataServiceMock.Verify(s => s.FindPlatromsForLocation(It.IsAny<string>()),
             Times.Once);
