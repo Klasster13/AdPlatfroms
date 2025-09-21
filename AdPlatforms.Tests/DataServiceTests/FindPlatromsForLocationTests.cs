@@ -62,7 +62,4 @@ public class FindPlatromsForLocationTests
         Assert.Equal(result, expectedResult);
         _dataRepositoryMock.Verify(r => r.FindPlatromsForLocation(targetLocation), Times.Once);
     }
-
-
-
 }

@@ -30,7 +30,7 @@ public class AdsController(IDataService dataService) : ControllerBase
     [HttpPost("upload")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult Upload(IFormFile file)
+    public ActionResult<string> Upload(IFormFile file)
     {
         if (file is null || file.Length == 0)
         {
@@ -40,7 +40,7 @@ public class AdsController(IDataService dataService) : ControllerBase
         try
         {
             _dataService.UploadPlatformsFromFile(file);
-            return Ok("Successful uploading data.");
+            return "Successful uploading data.";
         }
         catch (Exception ex)
         {
@@ -62,7 +62,7 @@ public class AdsController(IDataService dataService) : ControllerBase
     /// <responce code="200">Success</responce>
     /// <responce code="500">Error searching</responce>
     [HttpGet("search")]
-    [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<List<string>> GetPlatforms([FromQuery] string location)
     {
@@ -74,11 +74,11 @@ public class AdsController(IDataService dataService) : ControllerBase
         try
         {
             var platformsList = _dataService.FindPlatromsForLocation(location);
-            return Ok(platformsList);
+            return platformsList;
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
+            return BadRequest($"Error getting data: {ex.Message}");
         }
     }
 }
