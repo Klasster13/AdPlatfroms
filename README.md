@@ -32,12 +32,17 @@ API доступно по адресу:
 
     http://localhost:8080/api/swagger
 
+Выключение запущенного контейнера:
+
+    docker compose down
+
 
 ### Запуск вручную
 
-Запустить команду в папке с проектом:
+Запустить команды в папке с проектом:
 
-    dotnet publish AdPlatforms/AdPlatforms.csproj -c Release -o /app/publish
+    dotnet publish AdPlatforms/AdPlatforms.csproj -c Release -o ./app/publish &&
+    dotnet app/publish/AdPlatforms.dll
 
 API доступно по адресу:
 
@@ -52,3 +57,4 @@ API доступно по адресу:
 Запустить команду в папке с проектом:
 
     dotnet test
+
