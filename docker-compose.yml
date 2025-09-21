@@ -1,0 +1,9 @@
+services:
+  adplatforms:
+    container_name: adplatforms    
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080

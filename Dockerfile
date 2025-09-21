@@ -2,10 +2,20 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 WORKDIR /src
 
-COPY AdPlatforms/AdPlatforms.csproj .
-RUN dotnet restore AdPlatforms.csproj
-COPY AdPlatforms/ .
-RUN dotnet publish AdPlatforms.csproj -c Release -o /app/publish
+COPY AdPlatforms/AdPlatforms.csproj ./AdPlatforms/
+COPY AdPlatforms.Tests/AdPlatforms.Tests.csproj ./AdPlatforms.Tests/
+COPY *.sln ./
+
+RUN dotnet restore
+
+COPY AdPlatforms/ ./AdPlatforms/
+COPY AdPlatforms.Tests/ ./AdPlatforms.Tests/
+
+RUN dotnet dotnet build -c Release --no-restore
+RUN dotnet test -c Release --no-build --verbosity normal
+
+RUN dotnet publish AdPlatforms/AdPlatforms.csproj -c Release -o /app/publish --no-restore
+
 
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
@@ -13,7 +23,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 COPY --from=build /app/publish .
 
-ENV ASPNETCORE_URLS=http://+:6543
-EXPOSE 6543
+RUN adduser --disabled-password --home /app --gecos '' user && chown -R user:user /app
+USER user
 
-ENTRYPOINT ["dotnet", "TicTacToe.dll"]
+ENTRYPOINT ["dotnet", "AdPlatforms.dll"]
