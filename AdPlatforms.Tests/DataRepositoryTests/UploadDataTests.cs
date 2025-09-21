@@ -1,11 +1,21 @@
 ﻿using AdPlatforms.Models;
 using AdPlatforms.Repository.Impl;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace AdPlatforms.Tests.DataRepositoryTests;
 
 public class UploadDataTests
 {
-    private readonly DataRepository _dataRepository = new();
+    private readonly DataRepository _dataRepository;
+    private readonly Mock<ILogger<DataRepository>> _loggerMock;
+
+
+    public UploadDataTests()
+    {
+        _loggerMock = new Mock<ILogger<DataRepository>>();
+        _dataRepository = new DataRepository(_loggerMock.Object);
+    }
 
 
     [Fact]

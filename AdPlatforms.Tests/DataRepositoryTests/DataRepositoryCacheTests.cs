@@ -1,12 +1,22 @@
 ﻿using AdPlatforms.Models;
 using AdPlatforms.Repository.Impl;
+using Microsoft.Extensions.Logging;
+using Moq;
 using System.Diagnostics;
 
 namespace AdPlatforms.Tests.DataRepositoryTests;
 
 public class DataRepositoryCacheTests
 {
-    private readonly DataRepository _dataRepository = new();
+    private readonly Mock<ILogger<DataRepository>> _loggerMock;
+    private readonly DataRepository _dataRepository;
+
+
+    public DataRepositoryCacheTests()
+    {
+        _loggerMock = new Mock<ILogger<DataRepository>>();
+        _dataRepository = new DataRepository(_loggerMock.Object);
+    }
 
 
     [Fact]

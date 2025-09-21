@@ -2,6 +2,7 @@
 using AdPlatforms.Repository;
 using AdPlatforms.Services.Impl;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System.Text;
 
@@ -11,11 +12,13 @@ public class UploadPlatformsFromFileTests
 {
     private readonly Mock<IDataRepository> _dataRepositoryMock;
     private readonly DataService _dataService;
+    private readonly Mock<ILogger<DataService>> _loggerMock;
 
     public UploadPlatformsFromFileTests()
     {
         _dataRepositoryMock = new Mock<IDataRepository>();
-        _dataService = new DataService(_dataRepositoryMock.Object);
+        _loggerMock = new Mock<ILogger<DataService>>();
+        _dataService = new DataService(_dataRepositoryMock.Object, _loggerMock.Object);
     }
 
 

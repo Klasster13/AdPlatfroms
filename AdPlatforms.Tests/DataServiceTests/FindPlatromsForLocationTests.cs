@@ -1,5 +1,7 @@
 ﻿using AdPlatforms.Repository;
+using AdPlatforms.Repository.Impl;
 using AdPlatforms.Services.Impl;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace AdPlatforms.Tests.DataServiceTests;
@@ -8,11 +10,14 @@ public class FindPlatromsForLocationTests
 {
     private readonly Mock<IDataRepository> _dataRepositoryMock;
     private readonly DataService _dataService;
+    private readonly Mock<ILogger<DataService>> _loggerMock;
+
 
     public FindPlatromsForLocationTests()
     {
         _dataRepositoryMock = new Mock<IDataRepository>();
-        _dataService = new DataService(_dataRepositoryMock.Object);
+        _loggerMock = new Mock<ILogger<DataService>>();
+        _dataService = new DataService(_dataRepositoryMock.Object, _loggerMock.Object);
     }
 
 
